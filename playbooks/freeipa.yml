@@ -1,0 +1,4 @@
+- hosts: freeipa
+  roles:
+    - common
+    - freeipa_server

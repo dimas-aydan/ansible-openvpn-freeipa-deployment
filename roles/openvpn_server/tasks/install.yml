@@ -1,0 +1,5 @@
+- name: Install Openvpn & Dependencies
+  dnf:
+    name:
+      - openvpn
+      - easy-rsa

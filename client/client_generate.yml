@@ -1,0 +1,63 @@
+# ansible-playbook client_generate.yml -e user_pass="your_password" -e username="your_name"
+- name: Setup Custom Openvpn Client User - FreeIPA
+  gather_facts: false
+  hosts: freeipa
+  vars_files:
+    - /etc/ansible/inventories/production/group_vars/all.yml
+  tasks:
+    - name: Access freeipa admin user
+      shell: echo "{{ ipaadmin_password }}" | kinit admin
+
+    - name: Create user in freeipa
+      shell: echo "{{ user_pass }}" | ipa user-add {{ username }} --first={{ username }} --last={{ username }} --password
+    
+    - name: Access user using kinit to prevent password expire
+      shell: |
+        script -q -c "kinit {{ username }}" <<EOF
+        {{ user_pass }}
+        {{ user_pass }}
+        {{ user_pass }}
+        EOF
+
+- name: Setup Custom OpenVPN Client User - OpenVPN
+  gather_facts: true
+  hosts: openvpn
+  vars_files:
+    - /etc/ansible/inventories/production/group_vars/openvpn.yml
+  tasks:
+    - name: Generate Openvpn Client Cert
+      shell: easyrsa --batch build-client-full "{{ username }}" nopass
+      args:
+        chdir: "{{ cert_dir }}"
+    
+    - name: Read CA file
+      shell: cat "{{ cert_dir }}/pki/ca.crt"
+      register: openvpn_ca
+
+    - name: Read server public key file
+      shell: cat "{{ cert_dir }}/pki/issued/{{ username }}.crt"
+      register: openvpn_client_cert
+
+    - name: Read server prviate key file
+      shell: cat "{{ cert_dir }}/pki/private/{{ username }}.key"
+      register: openvpn_client_key
+
+    - name: Read TLS-Auth key file
+      shell: cat "{{ cert_dir }}/pki/ta.key"
+      register: openvpn_tls_auth
+
+    - name: Create cert folder
+      file:
+        path: "/usr/share/{{ username }}_conf"
+        state: directory
+        mode: 0755
+
+    - name: Template a file to .conf file (For Linux platform)
+      template:
+        src: client.conf.j2
+        dest: "/usr/share/{{ username }}_conf/{{ username }}.conf"
+
+    - name: Template a file to .ovpn file (For Windows platform)
+      template: 
+        src: client.conf.j2
+        dest: "/usr/share/{{ username }}_conf/{{ username }}.ovpn"

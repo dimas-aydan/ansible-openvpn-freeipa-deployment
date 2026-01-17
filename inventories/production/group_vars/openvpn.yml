@@ -1,0 +1,9 @@
+# OpenVPN Server Vars
+openvpn_port: 1194
+openvpn_proto: udp
+openvpn_network: 192.168.254.0
+openvpn_netmask: 255.255.255.0
+
+# PKI Vars
+cert_dir: /usr/share/cert
+server_cert_cn: openvpn-server

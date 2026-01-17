@@ -1,0 +1,9 @@
+- name: Check sssd service status
+  ansible.builtin.command: systemctl is-active sssd
+  register: sssd_status
+  ignore_errors: true
+  changed_when: false
+    
+- name: Join to freeipa server domain
+  shell: ipa-client-install --server "{{ ipaserver_hostname }}"."{{ ipaserver_domain }}" --domain "{{ ipaserver_domain }}" -w "{{ ipaadmin_password }}" --realm "{{ ipaserver_realm }}" -p admin -U
+  when: sssd_status.stdout != "active"

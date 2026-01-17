@@ -1,0 +1,7 @@
+- name: Set up openvpn pam configuration
+  template:
+    src: openvpn_pam.j2
+    dest: /etc/pam.d/openvpn
+    mode: 644
+    owner: root
+    group: root

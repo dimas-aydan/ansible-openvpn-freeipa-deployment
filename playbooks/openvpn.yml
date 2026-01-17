@@ -1,0 +1,7 @@
+- hosts: openvpn
+  roles:
+    - common
+    - freeipa_client
+    - openvpn_server
+    - firewall
+    - hardening

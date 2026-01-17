@@ -1,0 +1,5 @@
+- hosts: replica
+  roles:
+    - common
+    - freeipa_client
+    - freeipa_replica

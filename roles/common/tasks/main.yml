@@ -1,0 +1,26 @@
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Add localhost host entry
+  lineinfile:
+    path: /etc/hosts
+    search_string: '127.0.0.1'
+    line: "127.0.0.1 localhost.localdomain localhost"
+    create: yes
+
+- name: Add server host entry
+  lineinfile:
+    path: /etc/hosts
+    search_string: "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }}"
+    line: "{{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }} {{ ansible_ssh_host }} {{ ansible_hostname }}" 
+
+- name: Add EPEL Repositories
+  dnf:
+    name: epel-release
+    state: present
+
+- name: Update OS System
+  dnf:
+    name: "*"
+    state: latest

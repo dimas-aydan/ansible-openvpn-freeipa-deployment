@@ -1,0 +1,32 @@
+client
+dev tun
+proto {{ openvpn_proto }}
+remote {{ ansible_default_ipv4.address|default(ansible_all_ipv4_addresses[0]) }} {{ openvpn_port }}
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca [inline]
+cert [inline]
+key [inline]
+remote-cert-tls server
+tls-auth [inline] 1
+verb 3
+auth-user-pass
+explicit-exit-notify 1
+
+<ca>
+{{ openvpn_ca.stdout }}
+</ca>
+
+<cert>
+{{ openvpn_client_cert.stdout }}
+</cert>
+
+<key>
+{{ openvpn_client_key.stdout }}
+</key>
+
+<tls-auth>
+{{ openvpn_tls_auth.stdout }}
+</tls-auth>

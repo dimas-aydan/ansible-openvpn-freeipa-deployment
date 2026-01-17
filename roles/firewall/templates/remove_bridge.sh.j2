@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Remove NAT table (removes masquerade)
+nft delete table ip nat 2>/dev/null
+
+# Remove filter table rules related to VPN
+# (If filter table is VPN-only, delete entire table)
+nft delete table ip filter 2>/dev/null

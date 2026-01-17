@@ -1,0 +1,24 @@
+all:
+    children:
+        freeipa:
+            hosts:
+                vm1.example.com:
+                    ansible_host: vm1.example.com
+                    ansible_port: 2321
+                    hostname: "vm1"
+        openvpn:
+            hosts:
+                vm2.example.com:
+                    ansible_host: vm2.example.com
+                    ansible_port: 2321
+                    hostname: "vm2"
+        replica:
+            hosts:
+                vm3.example.com:
+                    ansible_host: vm3.example.com
+                    ansible_port: 2321
+                    hostname: "vm3"
+                vm4.example.com:
+                    ansible_host: vm4.example.com
+                    ansible_port: 2321
+                    hostname: "vm4"

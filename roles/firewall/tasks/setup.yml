@@ -1,0 +1,22 @@
+- name: Install Nftables
+  dnf:
+    name: nftables
+    state: present
+
+- name: Activate nftables using systemd
+  systemd_service:
+    name: nftables
+    state: started
+    enabled: true
+    
+- name: Copy add_bridge.sh script
+  template:
+    src: add_bridge.sh.j2
+    dest: /etc/openvpn/server/add_bridge.sh
+    mode: 700
+    
+- name: Copy remove_bridge.sh script
+  template:
+    src: remove_bridge.sh.j2
+    dest: /etc/openvpn/server/remove_bridge.sh
+    mode: 700

@@ -1,0 +1,37 @@
+port {{ openvpn_port }}
+proto {{ openvpn_proto }}
+dev tun
+ca [inline]
+cert [inline]
+key [inline]
+topology subnet
+server {{ openvpn_network }} {{ openvpn_netmask }}
+ifconfig-pool-persist ipp.txt
+push "redirect-gateway def1 bypass-dhcp"
+keepalive 10 120
+tls-auth [inline] 0 
+persist-tun
+status /var/log/openvpn-status.log
+log         /var/log/openvpn.log
+log-append  /var/log/openvpn.log
+verb 3
+explicit-exit-notify 1
+verify-client-cert none
+username-as-common-name
+plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so "openvpn"
+
+<ca>
+{{ openvpn_ca.stdout }}
+</ca>
+
+<cert>
+{{ openvpn_server_cert.stdout }}
+</cert>
+
+<key>
+{{ openvpn_server_key.stdout }}
+</key>
+
+<tls-auth>
+{{ openvpn_tls_auth.stdout }}
+</tls-auth>

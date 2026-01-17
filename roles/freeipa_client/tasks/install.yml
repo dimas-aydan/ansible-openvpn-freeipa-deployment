@@ -1,0 +1,4 @@
+- name: Install FreeIPA client
+  dnf:
+    name: freeipa-client
+    state: present

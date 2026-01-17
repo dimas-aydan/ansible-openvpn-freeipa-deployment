@@ -1,0 +1,9 @@
+- name: Check FreeIPA Server Status
+  command: ipactl status
+  register: ipactl_status
+  ignore_errors: true
+  changed_when: false
+
+- name: Setup FreeIPA server
+  shell: ipa-server-install --no-host-dns -p "{{ ipadm_password }}" -a "{{ ipaadmin_password }}" -n "{{ ipaserver_domain }}" -r "{{ ipaserver_realm }}" -U
+  when: ipactl_status.rc != 0

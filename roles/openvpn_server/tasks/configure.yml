@@ -1,0 +1,26 @@
+- name: Read CA file
+  shell: cat "{{ cert_dir }}/pki/ca.crt"
+  register: openvpn_ca
+  changed_when: false
+    
+- name: Read server public key file
+  shell: cat "{{ cert_dir }}/pki/issued/{{ server_cert_cn }}.crt"
+  register: openvpn_server_cert
+  changed_when: false
+
+- name: Read server prviate key file
+  shell: cat "{{ cert_dir }}/pki/private/{{ server_cert_cn }}.key"
+  register: openvpn_server_key
+  changed_when: false
+
+- name: Read TLS-Auth key file
+  shell: cat "{{ cert_dir }}/pki/ta.key"
+  register: openvpn_tls_auth
+  changed_when: false
+
+- name: Template a file to /etc/openvpn/server/server.conf
+  template:
+    src: server.conf.j2
+    dest: /etc/openvpn/server/server.conf
+  notify:
+    - Restart openvpn-server

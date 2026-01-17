@@ -1,0 +1,68 @@
+- name: Create symbolic link for easyrsa
+  file:
+    src: /usr/share/easy-rsa/3/easyrsa
+    dest: /usr/local/sbin/easyrsa
+    owner: root
+    group: root
+    state: link
+
+- name: Create cert folder
+  file:
+      path: "{{ cert_dir }}"
+      state: directory
+      mode: 0755
+
+- name: Check if PKI already initialized
+  stat:
+    path: "{{ cert_dir }}/pki"
+  register: pki_dir
+
+- name: Init PKI using easyrsa
+  shell: easyrsa --batch init-pki
+  args:
+    chdir: "{{ cert_dir }}"
+  when: not pki_dir.stat.exists
+
+- name: Check if CA already generated
+  stat:
+    path: "{{ cert_dir }}/pki/ca.crt"
+  register: ca_crt
+
+- name: Generate CA
+  shell: easyrsa --nopass --batch build-ca
+  args:
+    chdir: "{{ cert_dir }}"
+  when: not ca_crt.stat.exists
+
+- name: Check if Server Certificate already generated
+  stat:
+    path: "{{ cert_dir }}/pki/issued/{{ server_cert_cn }}.crt"
+  register: server_crt
+
+- name: Generate Server Certificate
+  shell: easyrsa --batch build-server-full "{{ server_cert_cn }}" nopass
+  args:
+    chdir: "{{ cert_dir }}"
+  when: not server_crt.stat.exists
+
+- name: Check if Diffie Hellman already generated
+  stat:
+    path: "{{ cert_dir }}/pki/dh.pem"
+  register: dh_crt
+
+- name: Generate Diffie Hellman (DH)
+  shell: easyrsa --batch gen-dh
+  args:
+    chdir: "{{ cert_dir }}"
+  when: not dh_crt.stat.exists
+
+- name: Check if OpenVPN TLS-Auth Key already generated
+  stat:
+    path: "{{ cert_dir }}/pki/ta.key"
+  register: ta_crt
+
+- name: Generate OpenVPN TLS-Auth Key
+  shell: openvpn --genkey secret pki/ta.key
+  args:
+    chdir: "{{ cert_dir }}"
+  when: not ta_crt.stat.exists
