@@ -125,6 +125,8 @@ ansible
                 server.conf.j2
 ```
 
+---
+
 # About Client Folder & Playbook
 The playbook client/client_generate.yml is used to generate OpenVPN Client config (.ovpn/.conf) and create the user in FreeIPA
 
