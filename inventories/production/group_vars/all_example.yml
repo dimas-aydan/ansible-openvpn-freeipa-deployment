@@ -3,3 +3,4 @@ ipaadmin_password: YOUR_PASSWORD
 ipaserver_domain: example.com
 ipaserver_realm: EXAMPLE.COM
 ipaserver_hostname: vm1
+ipaserver_ip: 192.168.1.1

@@ -24,3 +24,35 @@
   dnf:
     name: "*"
     state: latest
+
+- name: Check If swapfile Already Exists
+  ansible.builtin.stat:
+    path: /swapfile
+  register: swapfile_stat
+
+- name: Create swapfile
+  ansible.builtin.command: fallocate -l 2G /swapfile
+  when: not swapfile_stat.stat.exists
+
+- name: Set Permissions On swapfile
+  ansible.builtin.file:
+    path: /swapfile
+    owner: root
+    group: root
+    mode: 0600
+  when: not swapfile_stat.stat.exists
+
+- name: Format swapfile
+  ansible.builtin.command: mkswap /swapfile
+  when: not swapfile_stat.stat.exists
+
+- name: Enable swapfile
+  ansible.builtin.command: swapon /swapfile
+  when: not swapfile_stat.stat.exists
+
+- name: Ensure swapfile is in /etc/fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    regexp: "^/swapfile\\s+"
+    line: "/swapfile none swap sw 0 0"
+    state: present

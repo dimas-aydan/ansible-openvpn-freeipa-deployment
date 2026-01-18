@@ -1,12 +1,12 @@
 all:
     children:
-        freeipa:
+        openvpn:
             hosts:
                 vm1.example.com:
                     ansible_host: vm1.example.com
                     ansible_port: 2321
                     hostname: "vm1"
-        openvpn:
+        freeipa:
             hosts:
                 vm2.example.com:
                     ansible_host: vm2.example.com
