@@ -23,9 +23,9 @@ Proper DNS SRV records are mandatory for Kerberos authentication and FreeIPA hig
 Incorrect or missing records may cause authentication failures during server failover.
 
 2. Configure SSH key-based authentication
-- Generate an SSH key on the Ansible control node (if not already present)
-- Ensure the Ansible control node can access all target machines using SSH key-based authentication
-- Password-based SSH access is not recommended
+    - Generate an SSH key on the Ansible control node (if not already present)
+    - Ensure the Ansible control node can access all target machines using SSH key-based authentication
+    - Password-based SSH access is not recommended
 
 3. Rename the example inventory file:
 
