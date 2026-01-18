@@ -6,6 +6,8 @@ Notes :
 3. Because FreeIPA DNS is not configured, you must manually create the required DNS records on your own DNS server (or manage name resolution via /etc/hosts).
 4. A FreeIPA Replica is included in this project to provide high availability for authentication services.
 
+---
+
 Prerequisite :
 1. Create DNS SRV records for the FreeIPA Server and FreeIPA Replica
 
@@ -38,6 +40,8 @@ inventories/production/group_vars/all_example.yml → all.yml
 ```
 
 5. Use a fresh operating system installation (Recommended)
+
+---
 
 Project Structure :
 ```
