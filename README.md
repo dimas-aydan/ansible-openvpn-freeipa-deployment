@@ -134,6 +134,7 @@ ansible-playbook client/client_generate.yml -e user_pass="your_password" -e user
 ```
 
 The generated OpenVPN Client Config is saved in OpenVPN Server Machine.
+
 You can get the file in this folder :
 ```
 /usr/share/[username]_conf/[username].ovpn
