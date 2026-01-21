@@ -1,4 +1,4 @@
-# ansible-playbook client_generate.yml -e user_pass="your_password" -e username="your_name"
+# ansible-playbook client_generate.yml -e username="your_name" -e user_pass="your_password"
 - name: Setup Custom Openvpn Client User - FreeIPA
   gather_facts: false
   hosts: freeipa

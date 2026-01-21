@@ -132,7 +132,7 @@ The playbook client/client_generate.yml is used to generate OpenVPN Client confi
 
 How to Run :
 ```
-ansible-playbook client/client_generate.yml -e user_pass="your_password" -e username="your_name"
+ansible-playbook client/client_generate.yml -e username="your_name" -e user_pass="your_password"
 ```
 
 The generated OpenVPN Client Config is saved in OpenVPN Server Machine.
