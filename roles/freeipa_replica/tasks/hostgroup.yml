@@ -1,0 +1,13 @@
+- name: Access FreeIPA admin user
+  shell: echo "{{ ipaadmin_password }}" | kinit admin
+  changed_when: false
+
+- name: Check If Server in ipaservers Host Group
+  ansible.builtin.command: ipa hostgroup-show ipaservers
+  register: ipaservers_check
+  changed_when: false
+  ignore_errors: true
+
+- name: Add Server To ipaservers Group
+  shell: ipa hostgroup-add-member ipaservers --hosts {{ ansible_hostname }}.{{ ipaserver_domain }}
+  when: ansible_hostname not in ipaservers_check.stdout 

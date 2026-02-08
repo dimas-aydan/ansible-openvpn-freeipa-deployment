@@ -3,7 +3,20 @@
   register: sssd_status
   ignore_errors: true
   changed_when: false
-    
+
+- name: Access FreeIPA admin user in FreeIPA server
+  delegate_to: "{{ ipaserver_hostname }}.{{ ipaserver_domain }}"
+  shell: echo "{{ ipaadmin_password }}" | kinit admin
+  changed_when: false
+
+- name: Check If Host Already Enrolled To Realm
+  delegate_to: "{{ ipaserver_hostname }}.{{ ipaserver_domain }}"
+  shell: ipa host-find --hostname={{ hostname }}.{{ ipaserver_domain }}
+  register: check_enroll
+  ignore_errors: true
+  changed_when: false
+
 - name: Join to freeipa server domain
-  shell: ipa-client-install --server "{{ ipaserver_hostname }}"."{{ ipaserver_domain }}" --domain "{{ ipaserver_domain }}" -w "{{ ipaadmin_password }}" --realm "{{ ipaserver_realm }}" -p admin --force-join -U
-  when: sssd_status.stdout != "active"
+  shell: ipa-client-install --server "{{ ipaserver_hostname }}"."{{ ipaserver_domain }}" --domain "{{ ipaserver_domain }}" -w "{{ ipaadmin_password }}" --realm "{{ ipaserver_realm }}" -p admin -U
+  when:  ansible_hostname not in check_enroll.stdout and sssd_status.stdout != "active"
+

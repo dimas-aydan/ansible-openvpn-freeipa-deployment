@@ -55,7 +55,7 @@
     - name: Template a file to .conf file (For Linux platform)
       template:
         src: client.conf.j2
-        dest: "/usr/share/{{ username }}_conf/{{ username }}.conf"
+        dest: "/usr/share/{{ username }}_conf/client.conf"
 
     - name: Template a file to .ovpn file (For Windows platform)
       template: 

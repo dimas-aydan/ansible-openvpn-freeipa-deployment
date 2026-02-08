@@ -1,34 +1,3 @@
-- name: Add FreeIPA Server host entry
-  lineinfile:
-    path: /etc/hosts
-    search_string: "{{ ipaserver_ip }}"
-    line: "{{ ipaserver_ip }} {{ ipaserver_hostname }}.{{ ipaserver_domain }} {{ ipaserver_hostname }}" 
-
-- name: Install FreeIPA server 
-  dnf:
-    name: freeipa-server
-    state: present
-
-- name: Access FreeIPA admin user
-  shell: echo "{{ ipaadmin_password }}" | kinit admin
-  changed_when: false
-
-- name: Check If Server in ipaservers Host Group
-  ansible.builtin.command: ipa hostgroup-show ipaservers
-  register: ipaservers_check
-  changed_when: false
-  ignore_errors: true
-
-- name: Add Server To ipaservers Group
-  shell: ipa hostgroup-add-member ipaservers --hosts {{ ansible_hostname }}.{{ ipaserver_domain }}
-  when: ansible_hostname not in ipaservers_check.stdout 
-
-- name: Check If Server Already Enroll As Replica
-  ansible.builtin.command: ipa server-find {{ ansible_hostname }}.{{ ipaserver_domain }}
-  register: ipa_replica_check
-  changed_when: false
-  ignore_errors: true
-
-- name: Enroll As FreeIPA Replica
-  shell: ipa-replica-install -w "{{ ipaadmin_password }}" -P admin --no-host-dns -U
-  when: ansible_hostname not in ipa_replica_check.stdout
+- import_tasks: install.yml
+- import_tasks: hostgroup.yml
+- import_tasks: enroll.yml
