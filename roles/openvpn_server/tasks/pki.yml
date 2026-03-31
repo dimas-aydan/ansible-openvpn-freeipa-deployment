@@ -45,17 +45,6 @@
     chdir: "{{ cert_dir }}"
   when: not server_crt.stat.exists
 
-- name: Check if Diffie Hellman already generated
-  stat:
-    path: "{{ cert_dir }}/pki/dh.pem"
-  register: dh_crt
-
-- name: Generate Diffie Hellman (DH)
-  shell: easyrsa --batch gen-dh
-  args:
-    chdir: "{{ cert_dir }}"
-  when: not dh_crt.stat.exists
-
 - name: Check if OpenVPN TLS-Auth Key already generated
   stat:
     path: "{{ cert_dir }}/pki/ta.key"

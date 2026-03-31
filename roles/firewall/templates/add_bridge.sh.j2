@@ -1,46 +1,28 @@
 #!/bin/bash
 
-# network interface which can connect to local network
 IF="eth0"
-
-# interface VPN tunnel uses
 VPNIF="tun0"
-
-# listening port of OpenVPN
 PORT="{{ openvpn_port }}"
 
 # =========================
 # NAT table
 # =========================
 nft add table ip nat
-
 nft add chain ip nat postrouting "{ type nat hook postrouting priority 100; }"
-
-# Masquerade VPN traffic going out to LAN/WAN
 nft add rule ip nat postrouting oifname $IF masquerade
 
 # =========================
 # Filter table
 # =========================
 nft add table ip filter
-
-# Forward chain
 nft add chain ip filter forward "{ type filter hook forward priority 0; policy drop; }"
-
-# Allow VPN clients to forward traffic out via IF
 nft add rule ip filter forward iifname $VPNIF oifname $IF accept
-
-# (Optional but recommended) allow return traffic
 nft add rule ip filter forward iifname $IF oifname $VPNIF ct state related,established accept
 
 # =========================
 # Input chain (OpenVPN port)
 # =========================
 nft add chain ip filter input "{ type filter hook input priority 0; policy drop; }"
-
-# Allow loopback
 nft add rule ip filter input iif lo accept
-
-# Allow interface
 nft add rule ip filter input iifname $IF accept
 nft add rule ip filter input iifname $VPNIF accept
