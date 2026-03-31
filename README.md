@@ -140,6 +140,6 @@ The generated OpenVPN Client Config is saved in OpenVPN Server Machine.
 You can get the file in this folder :
 ```
 /usr/share/[username]_conf/[username].ovpn
-/usr/share/[username]_conf/[username].conf
+/usr/share/[username]_conf/client.conf
 ```
 
